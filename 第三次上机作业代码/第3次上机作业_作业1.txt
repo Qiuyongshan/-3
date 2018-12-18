@@ -1,0 +1,47 @@
+（1）
+let dictionary = [["number":"2016110329","name":"邱永姗"],["number":"2016110330","name":"小秋"]]
+let number = dictionary.map{$0["number"]}.filter{$0 != ""}
+print(number)
+（2）
+let arry = ["1","a","67","hudj","980"]
+let number = arry.filter{Int($0) != nil}
+print("能够被转成整数的字符串：\(number)")
+（3）
+let stringArry = ["xx","yy","zz"]
+let connectedArry = stringArry.reduce(""){connectedArry,letter in "\(connectedArry),\(letter)"}
+print("连接后的字符串：\(connectedArry)")
+（4）
+var dataArry = [1,2,78,90,200]
+let temp = dataArry.reduce((max:Int.min,min:Int.max,sum:0)){(temp,i) in 
+	return(max(temp.max,i),min(temp.min,i),temp.sum+i) 
+}
+print("最大值：\(temp.max)")
+print("最小值：\(temp.min)")
+print("和为：\(temp.sum)")
+（6）
+import Darwin
+extension Int{
+	func sqrt(num:Int) -> Double{
+		return sqrt(Double(num))
+	}
+}
+print(sqrt(4))
+（7）
+func maxAndmin<T:Comparable>(data:[T]) -> (max:T,min:T) {
+	var max = data[0]
+	var min = data[0]
+	for i in data{
+		if max < i {
+			max = i
+		}else if min > i {
+			min = i
+		}
+	}
+	return (max,min)
+}
+let tempInt = maxAndmin(data:[67,89,35,100,38])
+print("传入的整数最大值为:\(tempInt.max)，最小值为:\(tempInt.min)")
+let tempFloat = maxAndmin(data:[67.0,89.0,35.0,100.0,38.0])
+print("传入的浮点数最大值为:\(tempFloat.max)，最小值为:\(tempFloat.min)")
+let tempString = maxAndmin(data:["D","s","Y","I"])
+print("传入的字符串最大值为:\(tempString.max)，最小值为:\(tempString.min)")

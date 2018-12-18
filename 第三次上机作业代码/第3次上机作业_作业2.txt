@@ -1,0 +1,161 @@
+enum Gender{
+    case male,female
+}
+enum Department{
+    case finance,technology,sales
+}
+
+class Person{
+    var firstName:String
+    var lastName:String
+    var age:Int
+    var gender:Gender
+    var fullName:String{
+        return firstName+" "+lastName
+    }
+    
+    init(firstName:String,lastName:String,age:Int,gender:Gender){
+        self.firstName = firstName
+        self.lastName = lastName
+        self.age = age
+        self.gender = gender
+    }
+    
+    convenience init(name:String){
+        self.init(firstName:name,lastName:"",age:18,gender:Gender.female)
+    }
+    
+    //直接输出Person
+    func description() -> String{
+        return "Name:\(fullName) Age:\(age) Gender:\(gender)"
+    }
+    
+    //重写==方法实现两个Person实例对象比较,定义：fullName相同则两个Person相等
+    static func == (p1:Person,p2:Person) -> Bool{
+        return p1.fullName == p2.fullName
+    }
+    
+    //第三次作业：run方法
+    func run() {
+        print("Person \(fullName) is running!")
+    }
+}
+//第三次作业：协议
+protocol SchoolProtocol{
+    var department:Department{ get }
+    func lendBook()
+}
+
+class Student:Person,SchoolProtocol{
+    var stuNo:String
+    init(firstName:String,lastName:String,age:Int,gender:Gender,stuNo:String){
+        self.stuNo = stuNo
+        super.init(firstName:firstName,lastName:lastName,age:age,gender:gender)
+    }
+    convenience init(name:String){
+        self.init(firstName:name,lastName:"",age:18,gender:Gender.female,stuNo:"2016110329")
+    }
+    override func description() -> String{
+        return String(stuNo)
+    }
+    override func run() {
+        print("Teacher \(fullName) is running!")
+    }
+    var department:Department = Department.finance
+    func lendBook() {
+        print("Student want to lend books.")
+    }
+}
+
+class Teacher:Person,SchoolProtocol{
+    var title:String
+    init(firstName:String,lastName:String,age:Int,gender:Gender,title:String){
+        self.title = title
+        super.init(firstName:firstName,lastName:lastName,age:age,gender:Gender.male)
+    }
+    convenience init(name:String){
+        self.init(firstName:name,lastName:"",age:18,gender:Gender.female,title:"老师")
+    }
+    override func description() -> String{
+        return String(title)
+    }
+    override func run() {
+        print("Student \(fullName) is running!")
+    }
+    var department:Department = Department.technology
+    func lendBook() {
+        print("Teacher want to lend books.")
+    }
+}
+
+let p1 = Person(firstName:"王",lastName:"阳明",age:56,gender:Gender.male)
+let p2 = Person(firstName:"王",lastName:"阳明",age:78,gender:Gender.female)
+let t1 = Teacher(firstName:"张",lastName:"小花",age:28,gender:Gender.female,title:"老师")
+let s1 = Student(firstName:"徐",lastName:"超",age:18,gender:Gender.male,stuNo:"2016110101")
+
+//两个person之间比较
+if p1 == p2{
+    print("They are same person!")
+}
+
+var personArry = [p1,p2,t1,s1]
+var dictionaries = [String:Person]()
+let personCount = 0
+var teacherCount = 0
+var studentCount = 0
+for people in personArry {
+    if people is Teacher {
+        print("这是Teacher类的对象:"+people.fullName)
+        dictionaries["Teacher"] = people
+        teacherCount = teacherCount+1
+    }else if people is Student{
+        print("这是Student类的对象:"+people.fullName)
+        dictionaries["Student"] = people
+        studentCount = studentCount+1
+    }else{
+        print("这是Person类的对象:"+people.fullName)
+    }
+}
+//age排序
+personArry.sort(by:{
+    (x:Person,y:Person) -> Bool in
+    return x.age > y.age
+})
+//fullName排序
+personArry.sort(by:{
+    (x:Person,y:Person) -> Bool in
+    return x.fullName > y.fullName
+})
+//age+fullName排序
+personArry.sort{
+	if $0.age == $1.age{
+		return $0.fullName > $1.fullName
+	}else{
+		return $0.age > $1.age
+	}
+}
+
+//穷举，调用每个对象的run方法，同时调用满足协议SchoolProtocol对象的lendBook方法
+for people in personArry{
+    people.run()
+    //判断people是否满足SchoolProtocol协议，如果不满足，那就将people转化为SchoolProtocol的对象，并将值赋值给p
+    if let p = people as? SchoolProtocol{
+        p.lendBook()
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
